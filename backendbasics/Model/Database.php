@@ -29,7 +29,6 @@ class Database
     }
 
     public function select($query = "" , $params = [])
-
     {
 
         try {
@@ -52,8 +51,7 @@ class Database
 
     }
 
-
-    private function executeStatement($query = "" , $params = [])
+    public function executeStatement($query = "" , $params = [])
 
     {
 
@@ -75,9 +73,7 @@ class Database
 
             $stmt->execute();
 
-
-
-            return $stmt; 
+            return $stmt;
 
         } catch(Exception $e) {
 
@@ -86,5 +82,4 @@ class Database
         }   
 
     }
-
 }

@@ -72,9 +72,6 @@ class UserController extends BaseController
     }
 
 
-    /**
-     * Add user
-     * 
     public function createAction()
     {
 
@@ -82,14 +79,17 @@ class UserController extends BaseController
 
         if(strtoupper($requestMethod) == 'POST'){
             // retrieve user registration data from the request body
-            /**$postData = json_decode(file_get_contents('php://input'),true); 
-            $postData = ['testcreateaction', 'testcreateaction']
+
+            //$postData = json_decode(file_get_contents('php://input'),true);
+            $postData = array($_GET['username'],$_GET['password']);
+
+            //$postData = array("testcreateion","testcreation");
             //instantiate usermodel
             $userModel = new UserModel();
             $userModel->createUser($postData);
         }
     
 
-    }*/
-
+    }
+    
 }
