@@ -52,6 +52,7 @@ class Database
 
     }
 
+
     private function executeStatement($query = "" , $params = [])
 
     {
@@ -73,6 +74,8 @@ class Database
             }
 
             $stmt->execute();
+
+
 
             return $stmt; 
 

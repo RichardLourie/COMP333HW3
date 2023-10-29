@@ -71,72 +71,25 @@ class UserController extends BaseController
 
     }
 
-        /** 
 
-* "/user/add" Endpoint - Add a user
-6
-*/
-    public function addUser()
+    /**
+     * Add user
+     * 
+    public function createAction()
     {
-        $strErrorDesc = '';
 
         $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-        $arrQueryStringParams = $this->getQueryStringParams();
-
-
-        if (strtoupper($requestMethod) == 'GET') {
-
-            try {
-
-                $userModel = new UserModel();
-                $intLimit = 10;
-
-                if (isset($arrQueryStringParams['limit']) && $arrQueryStringParams['limit']) {
-
-                    $intLimit = $arrQueryStringParams['limit'];
-
-                }
-
-                $arrUsers = $userModel->getUsers($intLimit);
-
-                $responseData = json_encode($arrUsers);
-            } catch (Error $e) {
-
-                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
-                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
-
-            }
-
-        } else {
-
-            $strErrorDesc = 'Method not supported';
-            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-
+        if(strtoupper($requestMethod) == 'POST'){
+            // retrieve user registration data from the request body
+            /**$postData = json_decode(file_get_contents('php://input'),true); 
+            $postData = ['testcreateaction', 'testcreateaction']
+            //instantiate usermodel
+            $userModel = new UserModel();
+            $userModel->createUser($postData);
         }
+    
 
-        // send output 
-
-        if (!$strErrorDesc) {
-
-            $this->sendOutput(
-
-                $responseData,
-
-                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-
-            );
-
-        } else {
-
-            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
-
-                array('Content-Type: application/json', $strErrorHeader)
-
-            );
-
-        }
-
-    }
+    }*/
 
 }
