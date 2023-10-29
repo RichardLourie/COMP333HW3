@@ -2,6 +2,8 @@
 
 require __DIR__ . "/inc/bootstrap.php";
 
+header('Accesss-Control-Allow-Origin:*');
+
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $uri = explode( '/', $uri );
