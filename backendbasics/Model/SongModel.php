@@ -4,21 +4,12 @@ require_once PROJECT_ROOT_PATH . "/Model/Database.php";
 
 
 
-class UserModel extends Database
+class SongModel extends Database
 
 {
 
-    public function getUsers($limit)
+    public function getSongs($limit)
     {
-
-        /*
-        *this was a test 
-
-        $userData = array("usrnm", "psrd");
-        
-        $this->createUser($userData);
-        */
-
         return $this->select("SELECT * FROM users ORDER BY username ASC LIMIT ?", ["i", $limit]);
     }
     /*
