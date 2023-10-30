@@ -21,7 +21,7 @@ class SongController extends BaseController
 
             try {
 
-                $userModel = new UserModel();
+                $songModel = new songModel();
                 $intLimit = 10;
 
                 if (isset($arrQueryStringParams['limit']) && $arrQueryStringParams['limit']) {
@@ -30,9 +30,9 @@ class SongController extends BaseController
 
                 }
 
-                $arrUsers = $userModel->getUsers($intLimit);
+                $arrRatings = $songModel->getSongs($intLimit);
 
-                $responseData = json_encode($arrUsers);
+                $responseData = json_encode($arrRatings);
             } catch (Error $e) {
 
                 $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
@@ -71,7 +71,7 @@ class SongController extends BaseController
 
     }
 
-
+    /*
     public function createAction()
     {
 
@@ -97,5 +97,6 @@ class SongController extends BaseController
     
 
     }
+    */
     
 }

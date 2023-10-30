@@ -10,8 +10,9 @@ class SongModel extends Database
 
     public function getSongs($limit)
     {
-        return $this->select("SELECT * FROM users ORDER BY username ASC LIMIT ?", ["i", $limit]);
+        return $this->select("SELECT * FROM ratings ORDER BY username ASC LIMIT ?", ["i", $limit]);
     }
+    
     /*
     public function createUser($postData)
     { 
@@ -38,7 +39,7 @@ class SongModel extends Database
 
     }
     */
-
+    /*
     public function createUser($postData)
     { 
         
@@ -78,8 +79,8 @@ class SongModel extends Database
         }
 
         return $response;
-
-    }
+    
+    }*/
     /**
     public function returnUser($userData)
 
