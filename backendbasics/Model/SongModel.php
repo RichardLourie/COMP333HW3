@@ -64,81 +64,38 @@ class SongModel extends Database
         return json_encode($response);  
     }
 
-    /**
-    public function createRatings($postData)
-    { 
-        
-        $username= $postData[0];
-        $artist = $postData[1];
-        $song = $postData[2];
-        $rating = (int) $postData[3]; 
+    public function updateRatings($postData) { 
+        $response = [
+            'success' => false,
+            'message' => '',
+        ];
 
-        // Check if the username exists in the users table
-        $userExistsQuery = "SELECT username FROM users WHERE username = ?";
-        $userExistsStmt = $this->connection->prepare($userExistsQuery);
-        $userExistsStmt->bind_param('s', $username);
-        $result = $userExistsStmt->execute();
-        $userExistsStmt->store_result();
+        $ratingId = (int) $postData[0];
+        $newArtist = $postData[1];
+        $newSong = $postData[2];
+        $newRating = (int) $postData[3];
 
-        if ($userExistsStmt->num_rows == 0) {
-            echo "Username does not exist in users table!";
-            exit();
-        }
+        // Construct an SQL query to update the rating
+        $updateQuery = "UPDATE ratings SET artist = ?, song = ?, rating = ? WHERE id = ?";
 
-        // Check if the song by the same artist already exists for the user
-        $songExistsQuery = "SELECT song FROM ratings WHERE username = ? AND artist = ? AND song = ?";
-        $songExistsStmt = $this->connection->prepare($songExistsQuery);
-        $songExistsStmt->bind_param('sss', $username, $artist, $song);
-        $songExistsStmt->execute();
-        $result = $songExistsStmt->execute();
-        $songExistsStmt->store_result();
-        $songCount = $songExistsStmt->num_rows;
-        $songExistsStmt->close();
+        // Prepare and execute the SQL query
+        $stmt = $this->connection->prepare($updateQuery); 
+        $stmt->bind_param("ssii", $newArtist, $newSong, $newRating, $ratingId);
 
-        if ($songCount > 0) {
-            echo "can't add a duplicate!";
-            echo '<br /><a href="ratingsPage.php">Go Back</a>';
-            exit();
-        }
-
-        $insertUserQuery = "INSERT INTO ratings (username, artist, song, rating) VALUES (?, ?, ?, ?)";
-        $stmt = $this->connection->prepare($insertUserQuery);
-
-        $stmt->bind_param('sssi', $username, $artist, $song, $rating)
-
-        if ($stmt->execute()) {
-            echo "song add successful!";
-            echo '<br /><a href="ratingsPage.php" class="back-link">back to ratings</a>';
+        if (mysqli_stmt_execute($stmt)) {
+            // Update successful
+            $response['success'] = true;
+            $response['message'] = "Successfully updated rating!";
+            return json_encode($response);
         } else {
-            echo "song add failed";
-            echo '<br /><a href="ratingsPage.php" class="back-link">Retry</a>';
-        }
-    
-    }*/
-    /**
-    public function returnUser($userData)
-
-    { 
-        $insertUserQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
-        $stmt = $this->connection->prepare($insertUserQuery);
-
-        if ($stmt === false) {
-            // Handle error, the statement could not be prepared
-            return false;
+            // Update failed
+            $response['message'] = "failure";
+            return json_encode($response);
         }
 
-        $username = $userData[0];
-        $password = $userData[1];
+        // Close the prepared statement
+        $stmt->close();
 
-        $result = $stmt->bind_param('ss', $username, $password);
-
-        if ($result === false) {
-            // Handle error, the parameters could not be bound
-            return false;
-        }
-
-        return $stmt->execute();
-
-    }*/
+    }
 
 }
