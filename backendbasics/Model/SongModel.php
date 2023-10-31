@@ -13,72 +13,106 @@ class SongModel extends Database
         return $this->select("SELECT * FROM ratings ORDER BY username ASC LIMIT ?", ["i", $limit]);
     }
     
-    /*
-    public function createUser($postData)
-    { 
-
-        $insertUserQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
-        $stmt = $this->connection->prepare($insertUserQuery);
-
-        if ($stmt === false) {
-            // Handle error, the statement could not be prepared
-            return false;
-        }
+    public function createRatings($postData) { 
+        $response = [
+            'success' => false,
+            'message' => '',
+        ];
 
         $username = $postData[0];
-        $password = $postData[1];
-
-        $result = $stmt->bind_param('ss', $username, $password);
-
-        if ($result === false) {
-            // Handle error, the parameters could not be bound
-            return false;
+        $artist = $postData[1];
+        $song = $postData[2];
+        $rating = (int) $postData[3]; 
+        
+        $checkUserQuery = "SELECT username FROM users WHERE username = ?";
+        $stmt = $this->connection->prepare($checkUserQuery);
+        $stmt->bind_param('s', $username);
+        $result = $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows == 0) {
+            $response['message'] = "Username does not exist in users table!";
+            return json_encode($response);
         }
 
-        return $stmt->execute();
+        // Check if the song by the same artist already exists for the user
+        $songExistsQuery = "SELECT song FROM ratings WHERE username = ? AND artist = ? AND song = ?";
+        $songExistsStmt = $this->connection->prepare($songExistsQuery);
+        $songExistsStmt->bind_param('sss', $username, $artist, $song);
+        $songExistsStmt->execute();
+        $result = $songExistsStmt->execute();
+        $songExistsStmt->store_result();
+        $songCount = $songExistsStmt->num_rows;
+        $songExistsStmt->close();
 
+        if ($songCount > 0) {
+            $response['message'] = "Cannot add a duplicate!";
+            return json_encode($response);
+        }
+
+        $insertUserQuery = "INSERT INTO ratings (username, artist, song, rating) VALUES (?, ?, ?, ?)";
+        $stmt = $this->connection->prepare($insertUserQuery);
+        $stmt->bind_param('sssi', $username, $artist, $song, $rating);
+
+        if ($stmt->execute()) {
+            $response['success'] = true;
+            $response['message'] = "Song add successful!";
+        } else {
+            $response['message'] = "Song add failed";
+        }
+        
+        return json_encode($response);  
     }
-    */
-    /*
-    public function createUser($postData)
+
+    /**
+    public function createRatings($postData)
     { 
         
         $username= $postData[0];
-        $password = $postData[1];
-        $verifyPassword = $postData[2];
+        $artist = $postData[1];
+        $song = $postData[2];
+        $rating = (int) $postData[3]; 
 
-        if ($password === $verifyPassword && strlen($password) >= 10) {
-            // Use password_hash to securely hash the user's password.
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        // Check if the username exists in the users table
+        $userExistsQuery = "SELECT username FROM users WHERE username = ?";
+        $userExistsStmt = $this->connection->prepare($userExistsQuery);
+        $userExistsStmt->bind_param('s', $username);
+        $result = $userExistsStmt->execute();
+        $userExistsStmt->store_result();
 
-            // Check if the user already exists.
-            
-            $checkUserQuery = "SELECT username FROM users WHERE username = ?";
-            $stmt = $this->connection->prepare($checkUserQuery);
-            $stmt->bind_param('s', $username);
-            $result = $stmt->execute();
-            $stmt->store_result();
-            
-            if ($stmt->num_rows > 0){
-                $response['error'] = "User with this username already exists. Please login or choose a different username.";
-            } else {
-                // Insert the new user into the users table.
-                $insertUserQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
-                $stmt = $this->connection->prepare($insertUserQuery);
-                $stmt->bind_param('ss', $username, $hashedPassword);
-                $result = $stmt->execute();
-
-                if ($result) {
-                    $response['success'] = "User registration successful!";         
-                } else {
-                    $response['error'] = "User registration failed!";   
-                }
-            }
-        } else {
-            $response['error'] = "Password and confirm password do not match or are less than 10 characters long.";
+        if ($userExistsStmt->num_rows == 0) {
+            echo "Username does not exist in users table!";
+            exit();
         }
 
-        return $response;
+        // Check if the song by the same artist already exists for the user
+        $songExistsQuery = "SELECT song FROM ratings WHERE username = ? AND artist = ? AND song = ?";
+        $songExistsStmt = $this->connection->prepare($songExistsQuery);
+        $songExistsStmt->bind_param('sss', $username, $artist, $song);
+        $songExistsStmt->execute();
+        $result = $songExistsStmt->execute();
+        $songExistsStmt->store_result();
+        $songCount = $songExistsStmt->num_rows;
+        $songExistsStmt->close();
+
+        if ($songCount > 0) {
+            echo "can't add a duplicate!";
+            echo '<br /><a href="ratingsPage.php">Go Back</a>';
+            exit();
+        }
+
+        $insertUserQuery = "INSERT INTO ratings (username, artist, song, rating) VALUES (?, ?, ?, ?)";
+        $stmt = $this->connection->prepare($insertUserQuery);
+
+        $stmt->bind_param('sssi', $username, $artist, $song, $rating)
+
+        if ($stmt->execute()) {
+            echo "song add successful!";
+            echo '<br /><a href="ratingsPage.php" class="back-link">back to ratings</a>';
+        } else {
+            echo "song add failed";
+            echo '<br /><a href="ratingsPage.php" class="back-link">Retry</a>';
+        }
     
     }*/
     /**

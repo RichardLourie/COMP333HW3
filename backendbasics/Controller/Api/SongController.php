@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 class SongController extends BaseController
 {
@@ -27,7 +27,6 @@ class SongController extends BaseController
                 if (isset($arrQueryStringParams['limit']) && $arrQueryStringParams['limit']) {
 
                     $intLimit = $arrQueryStringParams['limit'];
-
                 }
 
                 $arrRatings = $songModel->getSongs($intLimit);
@@ -71,22 +70,19 @@ class SongController extends BaseController
 
     }
 
-    /*
     public function createAction()
     {
-
         $requestMethod = $_SERVER["REQUEST_METHOD"];
 
         if(strtoupper($requestMethod) == 'POST'){
             // retrieve user registration data from the request body
 
             //$postData = json_decode(file_get_contents('php://input'),true);
-            $postData = array($_GET['username'],$_GET['password'], $_GET['confirmpassword']);
+            $postData = array($_GET['username'],$_GET['artist'], $_GET['song'], $_GET['rating']);
 
-            //$postData = array("testcreateion","testcreation");
             //instantiate usermodel
-            $userModel = new UserModel();
-            $result = $userModel->createUser($postData);
+            $songModel = new SongModel();
+            $result = $songModel->createRatings($postData);
 
             $this->sendOutput(json_encode($result),
 
@@ -97,6 +93,4 @@ class SongController extends BaseController
     
 
     }
-    */
-    
 }
