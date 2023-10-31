@@ -90,7 +90,26 @@ class SongController extends BaseController
 
             );
         }
-    
+    }
+    public function updateAction()
+    {
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
 
+        if(strtoupper($requestMethod) == 'POST'){
+            // retrieve user registration data from the request body
+
+            //$postData = json_decode(file_get_contents('php://input'),true);
+            $postData = array($_GET['ratingid'],$_GET['artist'], $_GET['song'], $_GET['rating']);
+
+            //instantiate usermodel
+            $songModel = new SongModel();
+            $result = $songModel->updateRatings($postData);
+
+            $this->sendOutput(json_encode($result),
+
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+
+            );
+        }
     }
 }
