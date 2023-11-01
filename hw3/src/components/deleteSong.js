@@ -11,6 +11,16 @@ class DeleteSong extends Component {
   handleDelete = () => {
     // Send a DELETE request to your API to delete the song with this.state.songId
     // Handle the response accordingly
+    fetch(`http://localhost/index.php/song/delete?ratingid=${this.state.songId}`, { method: 'DELETE' })
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          songId: data.songId,
+        });
+      })
+      .catch((error) => {
+        console.error('Error deleting song:', error);
+      });
   };
 
   render() {

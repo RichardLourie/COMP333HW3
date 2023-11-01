@@ -5,8 +5,8 @@ class ViewSong extends Component {
     super(props);
     this.state = {
       songId: props.songId,
-      artist: '', // Initialize these with the current values
-      song: '',
+      artist: 'justin beiber', // Initialize these with the current values
+      song: 'baby',
       rating: 1, // Initialize with the current rating
     };
   }
@@ -27,6 +27,11 @@ class ViewSong extends Component {
       });
   }
 
+  handleCancel = () => {
+    // Call the onCancel function passed as a prop
+    this.props.onCancel();
+  };
+
   render() {
     return (
       <div>
@@ -34,6 +39,7 @@ class ViewSong extends Component {
         <p>Artist: {this.state.artist}</p>
         <p>Song: {this.state.song}</p>
         <p>Rating: {this.state.rating}</p>
+        <button onClick={this.handleCancel}>Cancel</button>
       </div>
     );
   }
