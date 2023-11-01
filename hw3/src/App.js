@@ -3,6 +3,7 @@ import SongList from './components/songList';
 import UpdateSong from './components/updateSong';
 import ViewSong from './components/viewSong'; // Import your ViewSong component
 import DeleteSong from './components/deleteSong';
+import Login from './components/login'; // Import the Login component
 
 class App extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class App extends Component {
     this.state = {
       selectedEditSong: null, // State for editing a song
       selectedViewSong: null, // State for viewing a song
+      loggedIn: false, 
     };
   }
 
@@ -31,14 +33,38 @@ class App extends Component {
     this.setState({ selectedEditSong: null, selectedViewSong: null});
   };
 
+  handleLogin = () => {
+    // Perform login logic here and set loggedIn to true when login is successful
+    this.setState({ loggedIn: true });
+  };
+
+  handleLogout = () => {
+    // Perform logout logic here and set loggedIn to false when logout is successful
+    this.setState({ loggedIn: false });
+  };
+
   render() {
     const { selectedEditSong, selectedViewSong } = this.state;
 
     return (
+      // <div>
+      //   <SongList onEdit={this.handleEdit} onView={this.handleView} />
+      //   {selectedEditSong && (<UpdateSong song={selectedEditSong} onCancel={this.handleCancel} />)}
+      //   {selectedViewSong && (<ViewSong song={selectedViewSong} onCancel={this.handleCancel} />)}
+      // </div>
       <div>
-        <SongList onEdit={this.handleEdit} onView={this.handleView} />
-        {selectedEditSong && (<UpdateSong song={selectedEditSong} onCancel={this.handleCancel} />)}
-        {selectedViewSong && (<ViewSong song={selectedViewSong} onCancel={this.handleCancel} />)}
+      { /* Render the Login component when not logged in */}
+      { !this.loggedIn && <Login /> }
+
+      {this.loggedIn && <SongList onEdit={this.handleEdit} onView={this.handleView} />}
+      {selectedEditSong && (
+        <UpdateSong
+          song={selectedEditSong}
+          onCancel={this.handleCancelEdit}
+        />
+      )}
+      {selectedViewSong && <ViewSong song={selectedViewSong} />}
+      { this.loggedIn && <button onClick={this.handleLogout}>Logout</button> }
       </div>
     );
   }
