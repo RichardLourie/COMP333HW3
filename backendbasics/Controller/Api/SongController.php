@@ -112,4 +112,25 @@ class SongController extends BaseController
             );
         }
     }
+    public function deleteAction()
+    {
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+
+        if(strtoupper($requestMethod) == 'POST'){
+            // retrieve user registration data from the request body
+
+            //$postData = json_decode(file_get_contents('php://input'),true);
+            $postData = $_GET['ratingid'];
+
+            //instantiate usermodel
+            $songModel = new SongModel();
+            $result = $songModel->deleteRatings($postData);
+
+            $this->sendOutput(json_encode($result),
+
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+
+            );
+        }
+    }
 }

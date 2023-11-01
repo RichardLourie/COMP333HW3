@@ -94,8 +94,26 @@ class UserController extends BaseController
 
             );
         }
-    
 
+    }
+
+    public function verifyAction()
+    {
+        
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        if(strtoupper($requestMethod) == 'POST'){
+            //$postData = json_decode(file_get_contents('php://input'),true);
+            $postData = array($_GET['username'],$_GET['password']);
+
+            $userModel = new UserModel();
+            $result = $userModel->verifyUser($postData);
+
+            $this->sendOutput(json_encode($result),
+
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+
+            );
+        }
     }
     
 }

@@ -95,7 +95,24 @@ class SongModel extends Database
 
         // Close the prepared statement
         $stmt->close();
+    }
 
+    public function deleteRatings($postData){
+
+        $response = [
+            'success' => true,
+            'message' => 'rating deleted',
+        ];
+
+        $id = $postData;
+
+        $query = "DELETE FROM ratings WHERE id = ?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+
+        return $response;
     }
 
 }

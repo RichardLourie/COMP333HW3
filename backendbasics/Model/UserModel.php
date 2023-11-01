@@ -89,30 +89,44 @@ class UserModel extends Database
         return $response;
 
     }
-    /**
-    public function returnUser($userData)
+    public function verifyUser($postData)
+    {   
+        $response = [
+            'success' => false,
+            'message' => '',
+        ];
 
-    { 
-        $insertUserQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
-        $stmt = $this->connection->prepare($insertUserQuery);
+        $userid= $postData[0];
+        $password = $postData[1];
 
-        if ($stmt === false) {
-            // Handle error, the statement could not be prepared
-            return false;
+        $getUserQuery = "SELECT password FROM users WHERE username = ?";
+        $stmt = $this->connection->prepare($getUserQuery);
+        $stmt->bind_param("s", $userid);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // User with the entered username exists, now verify the password.
+            $row = $result->fetch_assoc();
+            $hashedPassword = $row['password'];
+
+            if (password_verify($password, $hashedPassword)) {
+                // Passwords match, so it's a successful login.
+                $response['success'] = "true"; 
+                $response['message '] = "user verified";
+                return json_encode($response);
+            } else {
+                $response['success'] = "false"; 
+                $response['message '] = "wrong user id or password";
+                return json_encode($response);
+
+            }
+        } else {
+            // No user with the entered username found.
+            $response['success'] = "false"; 
+            $response['message '] = "user does not exist";
+            return json_encode($response);
         }
-
-        $username = $userData[0];
-        $password = $userData[1];
-
-        $result = $stmt->bind_param('ss', $username, $password);
-
-        if ($result === false) {
-            // Handle error, the parameters could not be bound
-            return false;
-        }
-
-        return $stmt->execute();
-
-    }*/
+    }
 
 }
