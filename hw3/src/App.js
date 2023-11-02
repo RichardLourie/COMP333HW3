@@ -33,8 +33,7 @@ class App extends Component {
     this.setState({ selectedEditSong: null, selectedViewSong: null});
   };
 
-  handleLogin = () => {
-    // Perform login logic here and set loggedIn to true when login is successful
+  handleLoginSuccess = () => {
     this.setState({ loggedIn: true });
   };
 
@@ -44,7 +43,7 @@ class App extends Component {
   };
 
   render() {
-    const { selectedEditSong, selectedViewSong } = this.state;
+    const { selectedEditSong, selectedViewSong, loggedIn} = this.state;
 
     return (
       // <div>
@@ -64,7 +63,7 @@ class App extends Component {
         />
       )}
       {selectedViewSong && <ViewSong song={selectedViewSong} />}
-      { this.loggedIn && <button onClick={this.handleLogout}>Logout</button> }
+      {loggedIn && <button onClick={this.handleLogout}>Logout</button> }
       </div>
     );
   }

@@ -9,6 +9,7 @@ class SongList extends Component {
       songs: [1,'justin beiber','baby', 5],
       editingSong: null, // State for editing a song
       viewingSong: null, // State for viewing a song
+      addingSong: false,
     };
   }
 
@@ -22,7 +23,7 @@ class SongList extends Component {
   }
 
   render() {
-    const { songs, editingSong, viewingSong } = this.state;
+    const { songs, editingSong, viewingSong , addingSong} = this.state;
 
     return (
       <div>
@@ -51,6 +52,7 @@ class SongList extends Component {
             ))}
           </tbody>
         </table>
+        {!editingSong && !viewingSong && <button onClick={() => this.setState({ addingSong: true })}>Add Song</button>}
         {editingSong && <UpdateSong song={editingSong} />} {/* Render UpdateSong if a song is selected for editing */}
         {viewingSong && <ViewSong song={viewingSong} />} {/* Render ViewSong if a song is selected for viewing */}
       </div>
@@ -79,11 +81,14 @@ class SongList extends Component {
   };
 
   handleEdit = (song) => {
-    this.setState({ editingSong: song, viewingSong: null }); // Clear the viewingSong
+    this.setState({ editingSong: song, viewingSong: null, addingSong: false}); // Clear the viewingSong
   };
 
   handleView = (song) => {
-    this.setState({ viewingSong: song, editingSong: null }); // Clear the editingSong
+    this.setState({ viewingSong: song, editingSong: null, addingSong: false}); // Clear the editingSong
+  };
+  handleAdd = () => {
+    this.setState({ viewingSong: null, editingSong: null, addingSong: true}); // Clear the editingSong
   };
 }
 
