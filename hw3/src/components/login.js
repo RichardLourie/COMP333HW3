@@ -1,5 +1,5 @@
-// components/Login.js
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class Login extends Component {
   constructor(props) {
@@ -11,25 +11,16 @@ class Login extends Component {
   }
 
   handleLogin = () => {
-    this.state.loggedIn = true;
-    // Implement your login logic here
-    // Send a request to your backend for authentication
     const { username, password } = this.state;
-
-    // Example: You can use the Fetch API for sending login requests
-    fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Check if login was successful
-        if (data.success) {
-          // Perform actions after successful login
-          // For example, you can store the user's session or token
+  
+    // Replace with your API endpoint for authentication
+    axios
+      .post(`http://localhost/index.php/user/verify?username=${username}&password=${password}`)
+      .then((response) => {
+        const data = response.data;
+        if (data && data.response === true) {
+          // Login was successful, call the parent component's function to update the state
+          this.props.onLoginSuccess();
         } else {
           // Handle login failure, show an error message, etc.
         }
@@ -38,6 +29,7 @@ class Login extends Component {
         console.error('Error during login:', error);
       });
   };
+  
 
   render() {
     return (

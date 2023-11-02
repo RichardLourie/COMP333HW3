@@ -33,8 +33,7 @@ class App extends Component {
     this.setState({ selectedEditSong: null, selectedViewSong: null});
   };
 
-  handleLogin = () => {
-    // Perform login logic here and set loggedIn to true when login is successful
+  handleLoginSuccess = () => {
     this.setState({ loggedIn: true });
   };
 
