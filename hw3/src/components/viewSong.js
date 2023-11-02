@@ -4,10 +4,10 @@ class ViewSong extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      songId: props.songId,
-      artist: 'justin beiber', // Initialize these with the current values
-      song: 'baby',
-      rating: 1, // Initialize with the current rating
+        songId: props.song.id, // Access the song's id from props.song
+        artist: props.song.artist, // Access the song's artist from props.song
+        song: props.song.song, // Access the song's title from props.song
+        rating: props.song.rating, // Initialize with the current rating
     };
   }
 
@@ -39,7 +39,7 @@ class ViewSong extends Component {
         <p>Artist: {this.state.artist}</p>
         <p>Song: {this.state.song}</p>
         <p>Rating: {this.state.rating}</p>
-        <button onClick={this.handleCancel}>Cancel</button>
+        <button onClick={this.handleCancel}>Back</button>
       </div>
     );
   }

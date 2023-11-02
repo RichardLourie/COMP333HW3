@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class AddSong extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      artist: '', // Initialize these with empty values for adding a new song
+      artist: '',
       song: '',
-      rating: 1, // Initialize with a default rating
+      rating: 1,
     };
   }
 
   handleAdd = () => {
-    // Send a POST request to your API to add a new song
-    // Include this.state.artist, this.state.song, and this.state.rating in the request body
-    // Handle the response accordingly
-    fetch('http://localhost/index.php/song/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const newSongData = {
         artist: this.state.artist,
         song: this.state.song,
         rating: this.state.rating,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle the response data as needed
+      };
+    // Send a POST request to your API to add a new song using Axios
+    const { artist, song, rating } = this.state;
+    axios.post(`http://localhost/index.php/song/create?username=usr&artist=${artist}&song=${song}&rating=${rating}`)
+      .then((response) => {
+        // Check if the response was successful (you can further validate the response as needed)
+        if (response.status === 200) {
+          // Handle the response data as needed
+          // For example, you can show a success message or navigate to another page
+          console.log('Song added successfully');
+          this.props.onSongAdded(newSongData);
+        }
       })
       .catch((error) => {
         console.error('Error adding song:', error);

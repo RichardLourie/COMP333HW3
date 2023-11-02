@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class UpdateSong extends Component {
   constructor(props) {
@@ -6,39 +7,38 @@ class UpdateSong extends Component {
     this.state = {
       songId: props.song.id, // Access the song's id from props.song
       artist: props.song.artist, // Access the song's artist from props.song
-      song: props.song.title, // Access the song's title from props.song
+      song: props.song.song, // Access the song's title from props.song
       rating: props.song.rating, // Access the song's rating from props.song
     };
   }
 
   handleUpdate = () => {
+    const updatedSongData = {
+      id: this.state.songId,
+      artist: this.state.artist,
+      song: this.state.song,
+      rating: this.state.rating,
+    };
+  
     // Send a PUT request to your API to update the song with this.state.songId
     // Include this.state.artist, this.state.song, and this.state.rating in the request body
-    // Handle the response accordingly
-    fetch(`http://localhost/index.php/song/update?ratingid=${this.state.songId}&artist=${this.state.artist}&song=${this.state.song}&rating=${this.state.rating}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        artist: this.state.artist,
-        song: this.state.song,
-        rating: this.state.rating,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          songId: data.songId,
-        });
+    axios.post(`http://localhost/index.php/song/update?ratingid=${this.state.songId}&artist=${this.state.artist}&song=${this.state.song}&rating=${this.state.rating}`)
+      .then((response) => {
+        // Check if the response was successful
+        if (response.status === 200) {
+          // Pass the updatedSongData to the parent component
+          this.props.onSongUpdated(updatedSongData);
+          console.log("Song updated successfully");
+        }
       })
       .catch((error) => {
         console.error('Error updating song:', error);
       });
   };
+  
 
   handleCancel = () => {
-    // Call the onCancel function passed as a prop
+    // Set selectedEditSong to null
     this.props.onCancel();
   };
 

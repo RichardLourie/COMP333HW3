@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import UpdateSong from './updateSong'; // Use PascalCase for component names
 import ViewSong from './viewSong'; // Use PascalCase for component names
+import AddSong from './addSong';
+import axios from 'axios';
 
 class SongList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      songs: [1,'justin beiber','baby', 5],
+      songs: [],
       editingSong: null, // State for editing a song
       viewingSong: null, // State for viewing a song
       addingSong: false,
@@ -15,11 +17,19 @@ class SongList extends Component {
 
   componentDidMount() {
     // Fetch the list of songs when the component mounts
-    // Replace 'YOUR_API_ENDPOINT/songs' with your actual API endpoint
-    // fetch('http://localhost/index.php/song/list?limit=20')
-    //   .then((response) => response.json())
-    //   .then((data) => this.setState({ songs: data }));
-    // songs = [1,'justin beiber','baby', 5]
+    axios.get('http://localhost/index.php/song/list?limit=20')
+      .then((response) => {
+        // Check if the response was successful
+        if (response.status === 200) {
+          // Assuming the response data is an array of songs
+          const songs = response.data;
+          this.setState({ songs });
+          console.log('songs:', songs)
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching songs:', error);
+      });
   }
 
   render() {
@@ -40,8 +50,9 @@ class SongList extends Component {
           <tbody>
             {songs.map((song) => (
               <tr key={song.id}>
+                {/* <td>{song.username}</td> */}
                 <td>{song.artist}</td>
-                <td>{song.title}</td>
+                <td>{song.song}</td>
                 <td>{song.rating}</td>
                 <td>
                   <button onClick={() => this.handleDelete(song.id)}>Delete</button>
@@ -52,9 +63,10 @@ class SongList extends Component {
             ))}
           </tbody>
         </table>
-        {!editingSong && !viewingSong && <button onClick={() => this.setState({ addingSong: true })}>Add Song</button>}
-        {editingSong && <UpdateSong song={editingSong} />} {/* Render UpdateSong if a song is selected for editing */}
-        {viewingSong && <ViewSong song={viewingSong} />} {/* Render ViewSong if a song is selected for viewing */}
+        {!editingSong && !viewingSong && !addingSong && <button onClick={() => this.setState({ addingSong: true })}>Add Song</button>}
+        {editingSong && <UpdateSong song={editingSong} onCancel={this.handleCancel} onSongUpdated={this.handleSongUpdated}/>} {/* Render UpdateSong if a song is selected for editing */}
+        {viewingSong && <ViewSong song={viewingSong} onCancel={this.handleCancel}/>} {/* Render ViewSong if a song is selected for viewing */}
+        {addingSong && <AddSong onCancel={this.handleCancel} onSongAdded={this.handleSongAdded}/>}
       </div>
     );
   }
@@ -89,6 +101,35 @@ class SongList extends Component {
   };
   handleAdd = () => {
     this.setState({ viewingSong: null, editingSong: null, addingSong: true}); // Clear the editingSong
+  };
+  handleCancel = () => {
+    this.setState({ viewingSong: null, editingSong: null, addingSong: null}); // Clear the editingSong
+  };
+  handleSongUpdated = (updatedSongData) => {
+    // Find the index of the updated song in the songs array
+    // console.log("on song update function started")
+    const updatedSongIndex = this.state.songs.findIndex((song) => song.id === updatedSongData.id);
+    // console.log("index:", updatedSongIndex)
+    // console.log("song data:", updatedSongData)
+  
+    if (updatedSongIndex !== -1) {
+    //   console.log("condition satisfied")
+      // Replace the old song data with the updated data
+      const updatedSongs = [...this.state.songs];
+      updatedSongs[updatedSongIndex] = updatedSongData;
+    //   console.log("new info: ",updatedSongs[updatedSongIndex])
+  
+      // Update the state with the updated songs array
+      this.setState({ songs: updatedSongs, viewingSong: null, editingSong: null, addingSong: false});
+    }
+  };
+  handleSongAdded = (updatedSongData) => {
+
+    const updatedSongs = [...this.state.songs];
+    updatedSongs.push(updatedSongData);
+    //   console.log("new info: ",updatedSongs[updatedSongIndex])
+      // Update the state with the updated songs array
+    this.setState({ songs: updatedSongs, viewingSong: null, editingSong: null, addingSong: false});
   };
 }
 

@@ -29,12 +29,10 @@ class App extends Component {
     });
   };
 
-  handleCancel = () => {
-    this.setState({ selectedEditSong: null, selectedViewSong: null});
-  };
-
   handleLoginSuccess = () => {
-    this.setState({ loggedIn: true });
+    this.setState({ loggedIn: true }, () => {
+      console.log('logged in: ', this.state.loggedIn);
+    });
   };
 
   handleLogout = () => {
@@ -53,16 +51,10 @@ class App extends Component {
       // </div>
       <div>
       { /* Render the Login component when not logged in */}
-      { !this.loggedIn && <Login /> }
-
-      {this.loggedIn && <SongList onEdit={this.handleEdit} onView={this.handleView} />}
-      {selectedEditSong && (
-        <UpdateSong
-          song={selectedEditSong}
-          onCancel={this.handleCancelEdit}
-        />
-      )}
-      {selectedViewSong && <ViewSong song={selectedViewSong} />}
+      { !loggedIn && <Login onLoginSuccess={this.handleLoginSuccess} /> }
+      {loggedIn && <SongList onEdit={this.handleEdit} onView={this.handleView} />}
+      {selectedEditSong && (<UpdateSong song={selectedEditSong}/>)}
+      {selectedViewSong && <ViewSong song={selectedViewSong} onCancel={this.handleCancel}/>}
       {loggedIn && <button onClick={this.handleLogout}>Logout</button> }
       </div>
     );
