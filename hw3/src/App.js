@@ -44,7 +44,7 @@ class App extends Component {
   };
 
   render() {
-    const { selectedEditSong, selectedViewSong } = this.state;
+    const { selectedEditSong, selectedViewSong, loggedIn} = this.state;
 
     return (
       // <div>
@@ -64,7 +64,7 @@ class App extends Component {
         />
       )}
       {selectedViewSong && <ViewSong song={selectedViewSong} />}
-      { this.loggedIn && <button onClick={this.handleLogout}>Logout</button> }
+      {loggedIn && <button onClick={this.handleLogout}>Logout</button> }
       </div>
     );
   }

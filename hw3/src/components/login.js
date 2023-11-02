@@ -11,31 +11,32 @@ class Login extends Component {
   }
 
   handleLogin = () => {
-    // // Implement your login logic here
-    // // Send a request to your backend for authentication
-    // const { username, password } = this.state;
+    this.state.loggedIn = true;
+    // Implement your login logic here
+    // Send a request to your backend for authentication
+    const { username, password } = this.state;
 
-    // // Example: You can use the Fetch API for sending login requests
-    // fetch('/api/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ username, password }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     // Check if login was successful
-    //     if (data.success) {
-    //       // Perform actions after successful login
-    //       // For example, you can store the user's session or token
-    //     } else {
-    //       // Handle login failure, show an error message, etc.
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error during login:', error);
-    //   });
+    // Example: You can use the Fetch API for sending login requests
+    fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Check if login was successful
+        if (data.success) {
+          // Perform actions after successful login
+          // For example, you can store the user's session or token
+        } else {
+          // Handle login failure, show an error message, etc.
+        }
+      })
+      .catch((error) => {
+        console.error('Error during login:', error);
+      });
   };
 
   render() {
