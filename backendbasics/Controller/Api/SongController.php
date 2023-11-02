@@ -133,4 +133,22 @@ class SongController extends BaseController
             );
         }
     }
+
+    public function statsAction()
+    {
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+
+        if(strtoupper($requestMethod) == 'GET'){
+
+            //instantiate usermodel
+            $songModel = new SongModel();
+            $result = $songModel->getStats();
+
+            $this->sendOutput(json_encode($result),
+
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+
+            );
+        }
+    }
 }
