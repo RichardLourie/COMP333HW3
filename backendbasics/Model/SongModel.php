@@ -12,6 +12,43 @@ class SongModel extends Database
     {
         return $this->select("SELECT * FROM ratings ORDER BY username ASC LIMIT ?", ["i", $limit]);
     }
+
+    public function getStats()
+    {
+        $artistStatsQuery = "SELECT artist, COUNT(*) as entry_count, AVG(rating) as average_rating FROM ratings GROUP BY artist";
+        $stmt = $this->connection->prepare($artistStatsQuery);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($artist, $entryCount, $averageRating);
+
+        $musicStats = ['artists' => [], 'songs' => []];
+        while ($stmt->fetch()) {
+            $musicStats['artists'][] = [
+                'artist' => $artist,
+                'entry_count' => $entryCount,
+                'average_rating' => $averageRating
+            ];
+        }
+
+        $stmt->close();
+
+        $songStatsQuery = "SELECT song, COUNT(*) as entry_count, AVG(rating) as average_rating FROM ratings GROUP BY song";
+        $stmt = $this->connection->prepare($songStatsQuery);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($song, $entryCount, $averageRating);
+
+        while ($stmt->fetch()) {
+            $musicStats['songs'][] = [
+                'song' => $song,
+                'entry_count' => $entryCount,
+                'average_rating' => $averageRating
+            ];
+        }
+
+        $stmt->close();
+        return $musicStats;
+    }
     
     public function createRatings($postData) { 
         $response = [
@@ -98,7 +135,6 @@ class SongModel extends Database
     }
 
     public function deleteRatings($postData){
-
         $response = [
             'success' => true,
             'message' => 'rating deleted',

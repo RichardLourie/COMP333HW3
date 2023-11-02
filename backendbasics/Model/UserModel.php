@@ -11,42 +11,8 @@ class UserModel extends Database
     public function getUsers($limit)
     {
 
-        /*
-        *this was a test 
-
-        $userData = array("usrnm", "psrd");
-        
-        $this->createUser($userData);
-        */
-
         return $this->select("SELECT * FROM users ORDER BY username ASC LIMIT ?", ["i", $limit]);
     }
-    /*
-    public function createUser($postData)
-    { 
-
-        $insertUserQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
-        $stmt = $this->connection->prepare($insertUserQuery);
-
-        if ($stmt === false) {
-            // Handle error, the statement could not be prepared
-            return false;
-        }
-
-        $username = $postData[0];
-        $password = $postData[1];
-
-        $result = $stmt->bind_param('ss', $username, $password);
-
-        if ($result === false) {
-            // Handle error, the parameters could not be bound
-            return false;
-        }
-
-        return $stmt->execute();
-
-    }
-    */
 
     public function createUser($postData)
     { 
@@ -77,7 +43,7 @@ class UserModel extends Database
                 $result = $stmt->execute();
 
                 if ($result) {
-                    $response['success'] = "User registration successful!";         
+                    $response['success'] = true;         
                 } else {
                     $response['error'] = "User registration failed!";   
                 }
@@ -112,18 +78,18 @@ class UserModel extends Database
 
             if (password_verify($password, $hashedPassword)) {
                 // Passwords match, so it's a successful login.
-                $response['success'] = "true"; 
+                $response['success'] = true; 
                 $response['message '] = "user verified";
                 return json_encode($response);
             } else {
-                $response['success'] = "false"; 
+                $response['success'] = false; 
                 $response['message '] = "wrong user id or password";
                 return json_encode($response);
 
             }
         } else {
             // No user with the entered username found.
-            $response['success'] = "false"; 
+            $response['success'] = false; 
             $response['message '] = "user does not exist";
             return json_encode($response);
         }
