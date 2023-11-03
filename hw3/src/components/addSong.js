@@ -8,18 +8,20 @@ class AddSong extends Component {
       artist: '',
       song: '',
       rating: 1,
+      user: props.user,
     };
   }
 
   handleAdd = () => {
     const newSongData = {
+        username: this.state.user,
         artist: this.state.artist,
         song: this.state.song,
         rating: this.state.rating,
       };
     // Send a POST request to your API to add a new song using Axios
-    const { artist, song, rating } = this.state;
-    axios.post(`http://localhost/index.php/song/create?username=usr&artist=${artist}&song=${song}&rating=${rating}`)
+    const { artist, song, rating, user} = this.state;
+    axios.post(`http://localhost/index.php/song/create?username=${user}&artist=${artist}&song=${song}&rating=${rating}`)
       .then((response) => {
         // Check if the response was successful (you can further validate the response as needed)
         if (response.status === 200) {
@@ -27,6 +29,7 @@ class AddSong extends Component {
           // For example, you can show a success message or navigate to another page
           console.log('Song added successfully');
           this.props.onSongAdded(newSongData);
+          console.log('new song data: ', newSongData)
         }
       })
       .catch((error) => {

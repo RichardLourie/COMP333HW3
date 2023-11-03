@@ -52,7 +52,7 @@ class Login extends Component {
     if (data && data.success === true) {
       // Login was successful, call the parent component's function to update the state
       console.log("logged in successfully");
-      this.props.onLoginSuccess();
+      this.props.onLoginSuccess(username);
     } else {
       // Handle login failure, show an error message, etc.
     }
@@ -81,7 +81,7 @@ class Login extends Component {
     if (data && data.success === true) {
       // Login was successful, call the parent component's function to update the state
       console.log("user created and logged in successfully");
-      this.props.onLoginSuccess();
+      this.props.onLoginSuccess(username);
     } else {
       // Handle login failure, show an error message, etc.
     }

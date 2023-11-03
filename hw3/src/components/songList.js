@@ -12,6 +12,7 @@ class SongList extends Component {
       editingSong: null, // State for editing a song
       viewingSong: null, // State for viewing a song
       addingSong: false,
+      user: props.user,
     };
   }
 
@@ -33,14 +34,16 @@ class SongList extends Component {
   }
 
   render() {
-    const { songs, editingSong, viewingSong , addingSong} = this.state;
+    const { songs, editingSong, viewingSong , addingSong, user} = this.state;
 
     return (
       <div>
         <h2>Song List</h2>
+        <p>you are logged in as: {user}</p>
         <table>
           <thead>
             <tr>
+              <th>Username</th>
               <th>Artist</th>
               <th>Song</th>
               <th>Rating</th>
@@ -51,12 +54,13 @@ class SongList extends Component {
             {songs.map((song) => (
               <tr key={song.id}>
                 {/* <td>{song.username}</td> */}
+                <td>{song.username}</td>
                 <td>{song.artist}</td>
                 <td>{song.song}</td>
                 <td>{song.rating}</td>
                 <td>
-                  <button onClick={() => this.handleDelete(song.id)}>Delete</button>
-                  <button onClick={() => this.handleEdit(song)}>Edit</button>
+                  {user === song.username && <button onClick={() => this.handleDelete(song.id)}>Delete</button>}
+                  {user === song.username && <button onClick={() => this.handleEdit(song)}>Edit</button>}
                   <button onClick={() => this.handleView(song)}>View</button>
                 </td>
               </tr>
@@ -66,7 +70,7 @@ class SongList extends Component {
         {!editingSong && !viewingSong && !addingSong && <button onClick={() => this.setState({ addingSong: true })}>Add Song</button>}
         {editingSong && <UpdateSong song={editingSong} onCancel={this.handleCancel} onSongUpdated={this.handleSongUpdated}/>} {/* Render UpdateSong if a song is selected for editing */}
         {viewingSong && <ViewSong song={viewingSong} onCancel={this.handleCancel}/>} {/* Render ViewSong if a song is selected for viewing */}
-        {addingSong && <AddSong onCancel={this.handleCancel} onSongAdded={this.handleSongAdded}/>}
+        {addingSong && <AddSong user = {user} onCancel={this.handleCancel} onSongAdded={this.handleSongAdded}/>}
       </div>
     );
   }

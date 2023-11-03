@@ -11,7 +11,8 @@ class App extends Component {
     this.state = {
       selectedEditSong: null, // State for editing a song
       selectedViewSong: null, // State for viewing a song
-      loggedIn: false, 
+      loggedIn: false,
+      user: null,
     };
   }
 
@@ -29,9 +30,10 @@ class App extends Component {
     });
   };
 
-  handleLoginSuccess = () => {
-    this.setState({ loggedIn: true }, () => {
+  handleLoginSuccess = (username) => {
+    this.setState({ loggedIn: true , user: username}, () => {
       console.log('logged in: ', this.state.loggedIn);
+      console.log("user that logged in: ", this.state.user);
     });
   };
 
@@ -41,7 +43,7 @@ class App extends Component {
   };
 
   render() {
-    const { selectedEditSong, selectedViewSong, loggedIn} = this.state;
+    const { selectedEditSong, selectedViewSong, loggedIn, user} = this.state;
 
     return (
       // <div>
@@ -50,9 +52,10 @@ class App extends Component {
       //   {selectedViewSong && (<ViewSong song={selectedViewSong} onCancel={this.handleCancel} />)}
       // </div>
       <div>
+        {/* <h1>User: {user}</h1> */}
       { /* Render the Login component when not logged in */}
       { !loggedIn && <Login onLoginSuccess={this.handleLoginSuccess} /> }
-      {loggedIn && <SongList onEdit={this.handleEdit} onView={this.handleView} />}
+      {loggedIn && <SongList user ={user} onEdit={this.handleEdit} onView={this.handleView} />}
       {selectedEditSong && (<UpdateSong song={selectedEditSong}/>)}
       {selectedViewSong && <ViewSong song={selectedViewSong} onCancel={this.handleCancel}/>}
       {loggedIn && <button onClick={this.handleLogout}>Logout</button> }
