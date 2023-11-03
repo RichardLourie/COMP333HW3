@@ -8,12 +8,14 @@ class UserModel extends Database
 
 {
 
+    //lists users 
     public function getUsers($limit)
     {
 
         return $this->select("SELECT * FROM users ORDER BY username ASC LIMIT ?", ["i", $limit]);
     }
 
+    //creates a new entry in our users table
     public function createUser($postData)
     { 
         
@@ -55,6 +57,8 @@ class UserModel extends Database
         return $response;
 
     }
+
+    //Verifies a user
     public function verifyUser($postData)
     {   
         $response = [
