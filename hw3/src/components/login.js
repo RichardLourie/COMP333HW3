@@ -7,6 +7,7 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
+      confirmPassword: '',
       signingUp: false,
     };
   }
@@ -62,21 +63,24 @@ class Login extends Component {
   };
 
   handleSignup = () => {
-    const { username, password } = this.state;
+    // this.setState({signingUp: true});
+    console.log("now do the signing up part")
+    const { username, password, confirmPassword} = this.state;
     console.log('Username:', username);
     console.log('Password:', password);
   
     // Replace with your API endpoint for authentication
     axios
-  .post(`http://localhost/index.php/user/verify?username=${username}&password=${password}`)
+  .post(`http://localhost/index.php/user/create?username=${username}&password=${password}&confirmpassword=${confirmPassword}`)
+  
   .then((response) => {
     console.log('Response Data:', response.data);
-    const data = JSON.parse(response.data); // Parse the JSON string into an object
+    const data = response.data; // Parse the JSON string into an object
     console.log('data: ', data);
     console.log('success: ', data.success);
     if (data && data.success === true) {
       // Login was successful, call the parent component's function to update the state
-      console.log("logged in successfully");
+      console.log("user created and logged in successfully");
       this.props.onLoginSuccess();
     } else {
       // Handle login failure, show an error message, etc.
@@ -88,6 +92,7 @@ class Login extends Component {
   };
 
   render() {
+    const {signingUp} = this.state;
     return (
       <div>
         <h2>Login</h2>
@@ -103,8 +108,17 @@ class Login extends Component {
           value={this.state.password}
           onChange={(e) => this.setState({ password: e.target.value })}
         />
-        <button onClick={this.handleLogin}>Login</button>
-        {!signingUp && <button onClick={this.handleSignup}>Sign Up</button>}
+        
+        {signingUp && <input
+          type="password"
+          placeholder="Confirm Password"
+          value={this.state.confirmPassword}
+          onChange={(e) => this.setState({ confirmPassword: e.target.value })}
+        />}
+        {!signingUp && <button onClick={this.handleLogin}>Login</button>}
+        {!signingUp && <button onClick={() => this.setState({ signingUp: true })}>Sign Up</button>}
+        {signingUp && <button onClick={this.handleSignup}>Create Account</button>}
+        {signingUp && <button onClick={() => this.setState({ signingUp: false })}>Back</button>}
       </div>
     );
   }
