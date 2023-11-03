@@ -4,12 +4,7 @@ class BaseController
 
 {
 
-    /** 
-
-* __call magic method. 
-
-*/
-
+    //
     public function __call($name, $arguments)
 
     {
@@ -18,16 +13,7 @@ class BaseController
 
     }
 
-    /** 
-13
-* Get URI elements. 
-14
-*  
-15
-* @return array 
-16
-*/
-
+    //breaks apart an API call
     protected function getUriSegments()
 
     {
@@ -40,16 +26,7 @@ class BaseController
 
     }
 
-    /** 
-26
-* Get querystring params. 
-27
-*  
-28
-* @return array 
-29
-*/
-
+    //Get the string parameters
     protected function getQueryStringParams()
 
     {
@@ -58,18 +35,6 @@ class BaseController
 
     }
 
-
-    /** 
-36
-* Send API output. 
-37
-* 
-38
-* @param mixed $data 
-39
-* @param string $httpHeader 
-40
-*/
 
     protected function sendOutput($data, $httpHeaders=array())
 

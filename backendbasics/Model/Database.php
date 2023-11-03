@@ -6,6 +6,7 @@ class Database
 
     protected $connection = null;
 
+    //initalizes database connection. 
     public function __construct()
 
     {
@@ -28,6 +29,7 @@ class Database
 
     }
 
+    //returns a list of rows as a response to some SQL query 
     public function select($query = "" , $params = [])
     {
 

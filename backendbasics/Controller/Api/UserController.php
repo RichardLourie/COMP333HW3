@@ -3,11 +3,9 @@
 class UserController extends BaseController
 {
 
-    /** 
-
-* "/user/list" Endpoint - Get list of users 
-6
-*/
+    /*
+    Handles request to list all users
+    */
     public function listAction()
     {
         $strErrorDesc = '';
@@ -72,6 +70,7 @@ class UserController extends BaseController
     }
 
 
+    /*Handles request to create user*/
     public function createAction()
     {
 
@@ -97,6 +96,7 @@ class UserController extends BaseController
 
     }
 
+    /*Handles request to verify a user*/
     public function verifyAction()
     {
         
