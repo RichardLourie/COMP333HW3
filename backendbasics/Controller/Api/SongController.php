@@ -3,10 +3,8 @@
 class SongController extends BaseController
 {
 
-    /** 
-
-* "/user/list" Endpoint - Get list of users 
-6
+/*
+Handles request to list all songs. 
 */
     public function listAction()
     {
@@ -46,8 +44,6 @@ class SongController extends BaseController
 
         }
 
-        // send output 
-
         if (!$strErrorDesc) {
 
             $this->sendOutput(
@@ -70,6 +66,9 @@ class SongController extends BaseController
 
     }
 
+    /*
+    Function takes an API call to add a song. 
+    */
     public function createAction()
     {
         $requestMethod = $_SERVER["REQUEST_METHOD"];
@@ -91,6 +90,9 @@ class SongController extends BaseController
             );
         }
     }
+
+    /* Takes an API call to update a specific entry. 
+    */
     public function updateAction()
     {
         $requestMethod = $_SERVER["REQUEST_METHOD"];
@@ -112,6 +114,8 @@ class SongController extends BaseController
             );
         }
     }
+
+    /*Function handles an API call to delete a rating entry*/
     public function deleteAction()
     {
         $requestMethod = $_SERVER["REQUEST_METHOD"];
@@ -134,6 +138,8 @@ class SongController extends BaseController
         }
     }
 
+    /* Handles API call to return stats about the ratings on our site. 
+    */
     public function statsAction()
     {
         $requestMethod = $_SERVER["REQUEST_METHOD"];

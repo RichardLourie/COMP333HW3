@@ -8,11 +8,13 @@ class SongModel extends Database
 
 {
 
+    //lists rating entries using some general functions from Database. 
     public function getSongs($limit)
     {
         return $this->select("SELECT * FROM ratings ORDER BY username ASC LIMIT ?", ["i", $limit]);
     }
 
+    //Calculates statistics about artists and songs
     public function getStats()
     {
         $artistStatsQuery = "SELECT artist, COUNT(*) as entry_count, AVG(rating) as average_rating FROM ratings GROUP BY artist";
@@ -50,6 +52,7 @@ class SongModel extends Database
         return $musicStats;
     }
     
+    //Create a rating 
     public function createRatings($postData) { 
         $response = [
             'success' => false,
@@ -101,6 +104,7 @@ class SongModel extends Database
         return json_encode($response);  
     }
 
+    //update an entry
     public function updateRatings($postData) { 
         $response = [
             'success' => false,
@@ -134,6 +138,7 @@ class SongModel extends Database
         $stmt->close();
     }
 
+    //deletes a rating
     public function deleteRatings($postData){
         $response = [
             'success' => true,
