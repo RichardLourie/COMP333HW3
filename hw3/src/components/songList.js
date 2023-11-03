@@ -9,10 +9,12 @@ class SongList extends Component {
     super(props);
     this.state = {
       songs: [],
+      stats: null,
       editingSong: null, // State for editing a song
       viewingSong: null, // State for viewing a song
       addingSong: false,
       user: props.user,
+      statsData: null,
     };
   }
 
@@ -31,12 +33,22 @@ class SongList extends Component {
       .catch((error) => {
         console.error('Error fetching songs:', error);
       });
+
+    axios.get('http://localhost/index.php/song/stats')
+      .then((response) => {
+        // Update the state with the API response data
+        this.setState({ statsData: response.data });
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
   }
 
   render() {
-    const { songs, editingSong, viewingSong , addingSong, user} = this.state;
+    const { songs, editingSong, viewingSong , addingSong, user, statsData} = this.state;
 
     return (
+    <div>
       <div>
         <h2>Song List</h2>
         <p>you are logged in as: {user}</p>
@@ -72,28 +84,59 @@ class SongList extends Component {
         {viewingSong && <ViewSong song={viewingSong} onCancel={this.handleCancel}/>} {/* Render ViewSong if a song is selected for viewing */}
         {addingSong && <AddSong user = {user} onCancel={this.handleCancel} onSongAdded={this.handleSongAdded}/>}
       </div>
+            <div>
+            {statsData ? ( // Check if statsData is available
+              <div>
+                <h2>Artist Statistics</h2>
+                <ul>
+                  {statsData.artists.map((artistData) => (
+                    <li key={artistData.artist}>
+                      Artist: {artistData.artist}: Entry Count: {artistData.entry_count}, Average Rating: {artistData.average_rating}
+                    </li>
+                  ))}
+                </ul>
+                <h2>Song Statistics</h2>
+                <ul>
+                  {statsData.songs.map((songData) => (
+                    <li key={songData.song}>
+                      Song: {songData.song}: Entry Count: {songData.entry_count}, Average Rating: {songData.average_rating}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p>Loading statistics...</p>
+            )}
+          </div>
+        </div>
     );
   }
 
   // Add functions for handling delete, edit, and view actions
   handleDelete = (songId) => {
     // Send an HTTP DELETE request to delete the song
-    fetch(`/api/songs/${songId}`, { method: 'DELETE' })
+    axios
+      .get(`http://localhost/index.php/song/delete?ratingid=${songId}`)
       .then((response) => {
-        if (response.status === 200) {
-          // Song deleted successfully, show a notification
-          // You can use a notification library or create a custom notification component
-        //   showNotification('Song deleted successfully', 'success');
-          // Update your song list to reflect the changes
-          // For example, fetch the updated song list from the server
-        } else {
-        //   showNotification('Error deleting song', 'error');
-        }
+        // Assuming the response contains the deleted songId, you can access it as response.data.songId
+        if (response.status === 204 || response.status === 200) {
+            // The response status indicates success
+            // Handle the success here (e.g., update state)
+            console.log('song deleted succesfully')
+          } else {
+            // The response status indicates an error
+            // Handle the error here
+            console.error('Error deleting song:', response.status);
+          }
       })
       .catch((error) => {
         console.error('Error deleting song:', error);
-        // showNotification('Error deleting song', 'error');
       });
+      //update songs to not include the deleted song
+        const updatedSongs = [...this.state.songs];
+        const updatedSongIndex = this.state.songs.findIndex((song) => song.id === songId);
+        updatedSongs.splice(updatedSongIndex, 1);
+        this.setState({ songs: updatedSongs, viewingSong: null, editingSong: null, addingSong: false});
   };
 
   handleEdit = (song) => {

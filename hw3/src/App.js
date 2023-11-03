@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SongList from './components/songList';
 import UpdateSong from './components/updateSong';
 import ViewSong from './components/viewSong'; // Import your ViewSong component
-import DeleteSong from './components/deleteSong';
 import Login from './components/login'; // Import the Login component
 
 class App extends Component {
