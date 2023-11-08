@@ -2,7 +2,7 @@
 
 Directory: 
 /backendbasics
-This folder contains the files and folders to be placed in the htdocs folder of XAMPP. It contains the backend code that controls all of our data logic. 
+This folder contains the files and folders to be placed in the htdocs folder of XAMPP. It contains the backend code that controls all of our data logic. To clarify: the contents of this folder should be placed in htdocs folder. 
 
 /backendbasics/index.php
 This file directs the API calls to the relevant controllers
